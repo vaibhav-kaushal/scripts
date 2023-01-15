@@ -10,27 +10,11 @@ function __load_functions() {
 		# extract the actual path! :-) 
 		local func_location=$(string reverse $(string reverse $type_func_location | cut -d' ' -f1 ))
 
-		for filename in ${func_location:a:h}/functions/*; do
+		for filename in ${func_location:a:h}/functions/*(N); do
 			if [ -d "$filename" ]; then
-				cd $filename
-				echo "$(ls -al)" > $ZEXT_INSTALL_DIR/tmp/ls-alh.txt
-				lineCount=$(linesInFile $ZEXT_INSTALL_DIR/tmp/ls-alh.txt)
-
-				if [[ $? -ne 0 ]]; then
-					echo "Something wrong with $ZEXT_INSTALL_DIR/tmp/ls-alh.txt $filename."
-					continue
-				fi
-
-				lineCount=$((lineCount-3))
-
-				if [[ $lineCount == "0" ]]; then
-					# echo "NO FILES IN $filename"
-					continue
-				else
-					for f in $filename/*.zsh; do
+					for f in $filename/*.zsh(N); do
 						source $f
 					done
-				fi
 				cd $currDir
 			fi
 		done
