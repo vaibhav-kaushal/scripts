@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
+
 function __load_functions() {
 	local type_func_location=$(type ${funcstack[1]})
 	local currDir=$(pwd)
