@@ -6,7 +6,7 @@ echo "Currently in $(pwd)"
 echo "About to git push"
 
 git add .
-git commit -m "Auto-update commit on mac at $(date +%Y-%m-%d_%H-%M-%S) IST"
+git commit -m "Auto-update commit on personal mac at $(date +%Y-%m-%d_%H-%M-%S) IST"
 git push origin master
 if [[ $? -ne 0 ]]; then
 	osascript -e 'display notification "`git push origin master` failed" with title "Obsidian Push Failed"'
