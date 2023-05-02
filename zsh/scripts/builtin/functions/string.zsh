@@ -271,7 +271,6 @@ function string() {
 			;;
 		beginsWith)
 			# Make sure that there are at least 2 more arguments
-			echo "Number of args: $#"
 			if [[ $# -ne 3 ]]; then
 				echo "Strings to check were not supplied."
 				echo "Run 'string beginsWith:help' to learn the usage"
