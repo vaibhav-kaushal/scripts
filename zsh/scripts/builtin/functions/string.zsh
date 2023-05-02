@@ -269,6 +269,23 @@ function string() {
 					;;
 			esac
 			;;
+		beginsWith)
+			# Make sure that there are at least 2 more arguments
+			echo "Number of args: $#"
+			if [[ $# -ne 3 ]]; then
+				echo "Strings to check were not supplied."
+				echo "Run 'string beginsWith:help' to learn the usage"
+			fi
+
+			if [[ $2 == $3* ]]; then
+					return 0
+			else
+					return 23
+			fi
+			;;
+		beginsWith:help)
+			string:beginsWith:help "defence against accidental call"
+			;;
 		help)
 			pr blue "The following commands are available:"
 			pr default "${funcstack[1]} joinby|j   Uses 1st character of 1st arg as separator to join rest of the args"
@@ -276,6 +293,7 @@ function string() {
 			pr default "${funcstack[1]} lower      Converts the argument to loweracse letters"
 			pr default "${funcstack[1]} upper      Converts the argument to UPPERCASE letters"
 			pr default "${funcstack[1]} reverse|r  Reverses the string supplied to it"
+			pr default "${funcstack[1]} beginsWith Checks if a string begins with another string"
 			;;
 		*)
 			pr red "Unrecognized command. Run '${funcstack[1]} help' to get help"
@@ -326,8 +344,6 @@ function __stringTrim() {
     done
     echo "$x"
 }
-
-
 
 function string:upper:help() {
 	if [ $# -lt 1 ]; then
@@ -485,4 +501,18 @@ function string:trim:help() {
 	echo ""
 	echo '% echo /$(string trim "  vaibhav kaushal  ")/'
 	echo /$(string trim "  vaibhav kaushal  ")/
+}
+
+function string:beginsWith:help() {
+	if [ $# -lt 1 ]; then
+		echo "You are not supposed to call this command manually"
+		return 100
+	fi
+
+	echo "string beginsWith:"
+	echo ""
+	echo "Usage:"
+	echo "string beginsWith larger_string prefix"
+	echo ""
+	echo "Check if a string begins with another"
 }

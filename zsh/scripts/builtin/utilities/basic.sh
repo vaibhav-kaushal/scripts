@@ -219,6 +219,11 @@ function utils:get_argument_value() {
   local arg_pos
   local val_pos
 
+  # must have at least 2 arguments
+  if [[ $# -lt 2 ]]; then
+    return 2
+  fi
+
   # argument
   local needle
   needle=$1
