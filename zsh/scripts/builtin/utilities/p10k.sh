@@ -9,3 +9,4 @@ function prompt_curr_session() {
 		p10k segment -b white -f black -i '⊚ ' -t ""
 	fi
 }
+
