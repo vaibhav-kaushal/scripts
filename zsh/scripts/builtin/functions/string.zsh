@@ -24,10 +24,18 @@ function string() {
 				return 12
 			fi
 
-			local IFS="$2"
-			shift
-			shift
-			echo "$*"
+			local tmpStr
+			tmpStr="" # We will store our joined string here
+
+			shift  # remove $1 (the 'joinby' word from argument list)
+			sep=$1 # Set the separator value
+			shift  # and remove the separator string from the list of arguments as well
+
+			for i in "${*[@]}"; do
+        tmpStr="${tmpStr}${i}${sep}" # Concatenate the strings with separator repeatedly
+			done
+
+			printf ${tmpStr:0:-$(string length $sep)} # Remove the last separator added by the loop above and print
 			;;
 		joinby:help|j:help)
 			string:joinby:help "defence against accidental call"
@@ -109,7 +117,7 @@ function string() {
 				return 22
 			fi
 
-			echo "$(__stringTrim $2)"
+			printf "$(__stringTrim $2)"
 			;;
 		trim:help)
 			string:trim:help "defence against accidental call"
@@ -321,27 +329,26 @@ function __stringTrim() {
 			echo ""
 			return 0
 		fi
+		firstChar=${x:0:-$((${#x}-1))}
+		lastChar=${x:$((${#x}-1))}
+		
+		if [[ $firstChar == " " || $firstChar == "	" ]]; then
+				x="${x:1}"
+		else
+				frontTrimmed="true"
+		fi
 
-        firstChar=${x:0:-$((${#x}-1))}
-        lastChar=${x:$((${#x}-1))}
-        
-        if [[ $firstChar == " " || $firstChar == "	" ]]; then
-            x="${x:1}"
-        else
-            frontTrimmed="true"
-        fi
+		if [[ $lastChar == " " || $lastChar == "	" ]]; then
+				x="${x:0:-1}"
+		else
+				backTrimmed="true"
+		fi
 
-        if [[ $lastChar == " " || $lastChar == "	" ]]; then
-            x="${x:0:-1}"
-        else
-            backTrimmed="true"
-        fi
-
-        if [[ $frontTrimmed == "true" && $backTrimmed == "true" ]]; then
-            bl=false
-        fi
+		if [[ $frontTrimmed == "true" && $backTrimmed == "true" ]]; then
+				bl=false
+		fi
     done
-    echo "$x"
+    printf "$x"
 }
 
 function string:upper:help() {
