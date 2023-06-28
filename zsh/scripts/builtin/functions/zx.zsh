@@ -7,7 +7,7 @@ function zx() {
 		local funcdirpath
 		local funcfilepath
 		if [[ $# -eq 0 ]]; then
-			debugmsg "zx got no args"
+			debugmsg "zx r got no args"
 			__zx_usage "$0" "$1"
 			return
 		fi
@@ -90,6 +90,40 @@ function zx() {
 			fi
 		fi
 		;;
+	c | check)
+		shift
+		local funcdirpath
+		local funcfilepath
+		if [[ $# -eq 0 ]]; then
+			debugmsg "zx c got no args"
+			__zx_usage "$0" "$1"
+			return
+		fi
+
+		funcdirpath="$ZEXT_INSTALL_DIR/installed/extensions/$1"
+		funcfilepath="$ZEXT_INSTALL_DIR/installed/extensions/$1/$1.zsh"
+		# Check that the directory exists
+		if [ -e "$funcdirpath" ]; then
+		  # Must not be a symbolic link
+			if [ -L "$funcdirpath" ]; then
+				return 1
+			fi
+
+			# Must be a directory
+			if [ -d "$funcdirpath" ]; then
+				# file must be present
+				if [ -f "$funcfilepath" ]; then
+					return 0
+				else
+					return 2
+				fi
+			else
+				return 3
+			fi
+		else
+			return 4
+		fi
+		;;
 	help | *)
 		echo "$0 helps you work with the Zsh eXtensions."
 		;;
@@ -114,6 +148,14 @@ function __zx_usage() {
 		echo "Usage: $1 $2 repo_address"
 		echo "  The repo_address is a git repository address that is accessible from the current env"
 		echo "  Please ensure that you are able to access that repository."
+		;;
+	c | check)
+	  echo "$1 $2 will test if the extension is installed or not (returns 0 if it is installed)"
+		echo "Usage $1 $2 ext_name "
+		echo "  The ext_name is the name of the extension which you want to check if it is installed"
+		;;
+	*)
+		echo "You are not supposed to call this function manually"
 		;;
 	esac
 }
