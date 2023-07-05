@@ -122,6 +122,9 @@ function string() {
 		trim:help)
 			string:trim:help "defence against accidental call"
 			;;
+		random:help)
+			string:random:help "defence against accidental call"
+			;;
 		random) # Random string
 			# TODO: Write the help function
 			# TODO: Factor out the generation to a new function.
@@ -140,6 +143,12 @@ function string() {
 			# Set default length to 10
 			local req_len
 			req_len=10
+
+			if [ -z $2 ]; then 
+				echo "Randomization option not supplied" 
+				echo "Run 'string random:help' to learn the usage"
+				return 22
+			fi
 
 			case $2 in
 				alphalower) # Alphabetic numbers
@@ -256,7 +265,7 @@ function string() {
 					done
 					echo $dest_str
 					;;
-				alphanumeric|*)
+				alphanumeric)
 					local source_string="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 					local rand_num
 					local dest_str
@@ -275,6 +284,9 @@ function string() {
 					done
 					echo $dest_str
 					;;
+				help|*)
+					echo "Type is required"
+				  ;;
 			esac
 			;;
 		beginsWith)
@@ -301,6 +313,7 @@ function string() {
 			pr default "${funcstack[1]} upper      Converts the argument to UPPERCASE letters"
 			pr default "${funcstack[1]} reverse|r  Reverses the string supplied to it"
 			pr default "${funcstack[1]} beginsWith Checks if a string begins with another string"
+			pr default "${funcstack[1]} random     Returns a random string according to given arguments"
 			;;
 		*)
 			pr red "Unrecognized command. Run '${funcstack[1]} help' to get help"
@@ -507,6 +520,33 @@ function string:trim:help() {
 	echo ""
 	echo '% echo /$(string trim "  vaibhav kaushal  ")/'
 	echo /$(string trim "  vaibhav kaushal  ")/
+}
+
+function string:random:help() {
+	if [ $# -lt 1 ]; then
+		echo "You are not supposed to call this command manually"
+		return 100
+	fi
+
+	echo "string random: "
+	echo ""
+	echo "Usage:"
+	echo "string random charset [count]"
+	echo ""
+	echo "Returns a random string of length count (default is 10)"
+	echo "The returned string is made up of characters from the given charset."
+	echo "Valid charsets are:"
+	echo ""
+	echo "alphalower - lower case alphabets only"
+	echo "alphaupper - upper case alphabets only"
+	echo "alpha      - both lower and upper case alphabets"
+	echo "numeric    - numerical digits only"
+	echo "special    - special characters on a standard qwerty keyboard"
+	echo "allchars   - alphanumeric + special character sets"
+	echo ""
+	echo "Example:"
+	pr blue '% string random alphanumeric 15'
+	echo $(string random alphanumeric 15)
 }
 
 function string:beginsWith:help() {
