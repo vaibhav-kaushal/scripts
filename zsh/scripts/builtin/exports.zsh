@@ -19,3 +19,5 @@
 
 # To check if the scripts have been installed.
 export QWERTY_UIOP="ASDFGHJKL"
+export PATH=$HOME/bin:$PATH
+
